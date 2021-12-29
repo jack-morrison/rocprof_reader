@@ -1,4 +1,4 @@
-# <img src="./thumbsup.png" width="40"> `rocprof_reader`
+# :thumbsup: `rocprof_reader`
 
 This program is meant to take `rocprof` CSV output files as input and print out the content in easy-to-read columns.
 
