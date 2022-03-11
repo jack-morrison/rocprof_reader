@@ -28,6 +28,8 @@ This program is meant to take `rocprof` CSV output files as input and print out 
 ------------------------------------------------------------- '''
 ```
 
+To use the program...
+
 ```
 $ ./rocprof-reader.py --help
 usage: ./rocprof-reader.py --infile=<path-to-csv-file> [--no-args] [--time=<format>] [--help]
