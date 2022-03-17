@@ -39,7 +39,7 @@ def main():
     command_line_arguments = read_command_line_arguments()
 
     # Read in the data and re-format if needed
-    data_frame = read_format_print(command_line_arguments)
+    data_frame = read_format(command_line_arguments)
 
     # Change time format if asked and print results
     format_print(data_frame, command_line_arguments)
@@ -67,7 +67,7 @@ def read_command_line_arguments():
 # ===============================================================
 # READ IN THE DATA AND RE-FORMAT IF NEEDED/ASKED
 # ===============================================================
-def read_format_print(arguments):
+def read_format(arguments):
 
     # Open rocprof file
     try:
