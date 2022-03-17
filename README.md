@@ -23,12 +23,12 @@ This program is meant to take `rocprof` CSV output files as input and print out 
    * Print only the columns you want to view by providing a
      comma-separated list of column names
 
--------------------------------------------------------------- ```
+-------------------------------------------------------------- '''
 ```
 
 To use the program...
 
-```bash
+```
 $ ./rocprof-reader.py --help
 usage: ./rocprof-reader.py --infile=<path-to-csv-file> [--no-args] [--time=<format>] [--column-list=<comma-separated-list>] [--help]
 
