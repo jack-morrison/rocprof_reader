@@ -20,19 +20,17 @@ This program is meant to take `rocprof` CSV output files as input and print out 
 
    * Change time format from ns to us, ms, or s
 
- NOTICE: This program currently only works with the default files
-         that `rocprof` generates, with the following columns:
+   * Print only the columns you want to view by providing a
+     comma-separated list of column names
 
-           * Name, Calls, TotalDurationNs, AverageNs, Percentage
-
-------------------------------------------------------------- '''
+-------------------------------------------------------------- ```
 ```
 
 To use the program...
 
-```
+```bash
 $ ./rocprof-reader.py --help
-usage: ./rocprof-reader.py --infile=<path-to-csv-file> [--no-args] [--time=<format>] [--help]
+usage: ./rocprof-reader.py --infile=<path-to-csv-file> [--no-args] [--time=<format>] [--column-list=<comma-separated-list>] [--help]
 
 This program prints rocprof .csv files in columns for easier reading.
 
@@ -41,6 +39,8 @@ optional arguments:
   -n, --no-args         remove argument list from kernel functions if too long.
   -t {ns,us,ms,s}, --time {ns,us,ms,s}
                         choose time format.
+  -c COLUMN_LIST, --column-list COLUMN_LIST
+                        provide a comma-separated list of column names you want to view.
 
 required arguments:
   -i INFILE, --infile INFILE
