@@ -81,50 +81,96 @@ def read_format(arguments):
         line_number = 0
     
         for line in input_file_object:
+
+            # Remove any quotes
+            line = line.replace('"', '')
+
+            # Create comma-separated list from line and strip newlines
+            comma_separated_list = line.split(',')
+            comma_separated_list[-1] = comma_separated_list[-1].rstrip('\n')
+
+            # line 0 is header
+            if line_number == 0:
+                header_list = comma_separated_list
+                line_number = line_number + 1
+                continue
     
             # If the line has a function, it might have an argument list with commas
             if "(" in line:
-    
-                # Split line and add double quotes around function
-                # since it has commas in the argument list.
-                split_line=line.split("(")
-    
-                function_name  = split_line[0]
-                argument_list  = split_line[1].split(")")[0]
-                remaining_cols = split_line[1].split(")")[1]
-    
-                remaining_cols_list     = remaining_cols.split(",")
-                remaining_cols_list[-1] = remaining_cols_list[-1].rstrip("\n")
-                remaining_cols_list.pop(0)
-    
-                if arguments.no_args:
-                    line_list.append([function_name])
-                else:
-                    # Put the line back together as a list to be passed to pandas dataframe
-                    line_list.append([function_name + "(" + argument_list + ")"])
-    
-                for element in remaining_cols_list:
-                    line_list[line_number].append(element)
-    
-            # Else, remove double quotes from headings (if found) and add to list to be 
-            # passed to pandas dataframe
+   
+                # List to hold components of function 
+                function_list      = list()
+                
+                # List to reconstruct the line within
+                reconstructed_line = list()
+
+                # True if our item below is a component of the function
+                in_function = False
+
+                # True if we are ready to print the full function
+                print_flag  = False             
+
+                # Iterate through the line containing the function
+                for item in comma_separated_list:
+
+                    # If we have found the first component of the function
+                    if "(" in item:
+
+                        # Add the component to the function_list
+                        function_list.append(item)
+
+                        # Capture the function name
+                        function_name = item.split('(')[0]
+
+                        # We are now iterating through the components of the function
+                        in_function = True
+
+
+                    # If we have found the final component of the function
+                    elif ")" in item:
+
+                        # Add the component to the function_list 
+                        function_list.append(item)
+
+                        # We are now ready to print the full function
+                        print_flag  = True
+
+                        # We will no longer be iterating through the function
+                        in_function = False
+
+                    # If we are not iterating through the function or on first or last component
+                    else:
+
+                        # Add the item to the function_list of this is a component
+                        if in_function:
+                            function_list.append(item)
+                            continue
+
+                        # If we are ready to print the full function (and next item) to reconstructed_line
+                        if print_flag == True:
+                            if arguments.no_args:
+                                reconstructed_line.append(function_name)
+                            else:
+                                reconstructed_line.append(','.join(function_list))
+
+                            reconstructed_line.append(item)
+                            print_flag = False
+
+                        # Add item to reconstructed_line
+                        else:
+                            reconstructed_line.append(item)
+
+
+                line_list.append(reconstructed_line)
+
+            # If our line does not contain a function
             else:
-    
-                split_line     = line.split(",")
-                split_line[-1] = split_line[-1].rstrip("\n")
-                list_length    = len(split_line)
-    
-                for i in range(0, list_length):
-                    split_line[i] = split_line[i].strip('"')
-    
-                line_list.append(split_line)    
-    
-            # Keep track of line number
+                line_list.append(comma_separated_list) 
+
+            # Keep track of line number 
             line_number = line_number + 1
     
-        header_list = line_list[0]
-        line_list.pop(0)
-    
+        # Send line_list (list of all lines) and header_list to pandas dataframe
         df = pd.DataFrame(line_list, columns=header_list)
 
     return df
